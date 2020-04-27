@@ -1,10 +1,11 @@
 package com.nickgua.demo1.toppage
 
 import androidx.lifecycle.Observer
-import com.nickgua.demo1.common.BaseAndroidViewModel
-import com.nickgua.demo1.common.PageStatus
+import com.nickgua.demo1.PreferenceUtil
 import com.nickgua.demo1.R
+import com.nickgua.demo1.common.BaseAndroidViewModel
 import com.nickgua.demo1.common.PageEvent
+import com.nickgua.demo1.common.PageStatus
 import com.nickgua.demo1.common.getInfoString
 import com.nickgua.demo1.navigation.Direction
 import com.nickgua.model.data.WeatherElement
@@ -14,6 +15,8 @@ import com.nickgua.model.data.common.TaskResult
 import com.nickgua.model.model.WeatherRepository
 
 class TopPageViewModel(private val repository: WeatherRepository) : BaseAndroidViewModel() {
+
+    private var isFirstLaunchChecked: Boolean = false
 
     private val observer = Observer<TaskResult<*>> { result ->
         when(result) {
@@ -39,6 +42,13 @@ class TopPageViewModel(private val repository: WeatherRepository) : BaseAndroidV
     fun loadWeatherData() {
         setPageStatus(PageStatus.Loading)
         repository.getWeatherData(getResString(R.string.auth_code), "臺北市")
+    }
+
+    fun checkFirstLaunch() {
+        if (!PreferenceUtil.isFirstLaunch && !isFirstLaunchChecked) {
+            setPageEvent(PageEvent.Toast(getResString(R.string.welcome_message)))
+            isFirstLaunchChecked = true
+        }
     }
 
     override fun refresh() {

@@ -8,7 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.nickgua.demo1.*
+import com.nickgua.demo1.R
+import com.nickgua.demo1.ViewModelFactory
 import com.nickgua.demo1.common.PageEvent
 import com.nickgua.demo1.common.PageStatus
 import com.nickgua.demo1.common.isListOf
@@ -48,6 +49,17 @@ class TopPageFragment : Fragment() {
         }
     }
 
+    private val pageEventObserver = Observer<PageEvent> { event ->
+        when (event) {
+            is PageEvent.Navigation -> {
+                navigator.navigate(event.direction)
+            }
+            is PageEvent.Toast -> {
+                navigator.toast(event.message)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         navigator = Navigator(this)
@@ -70,15 +82,11 @@ class TopPageFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.pageStatus.observe(viewLifecycleOwner, pageStatusObserver)
-
-        viewModel.pageEvent.observe(viewLifecycleOwner, Observer { event ->
-            when(event) {
-                is PageEvent.Navigation -> {
-                    navigator.navigate(event.direction)
-                }
-            }
-        })
+        viewModel.apply {
+            pageStatus.observe(viewLifecycleOwner, pageStatusObserver)
+            pageEvent.observe(viewLifecycleOwner, pageEventObserver)
+            checkFirstLaunch()
+        }
     }
 
     private fun initSwipeRefresh() {

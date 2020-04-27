@@ -11,4 +11,9 @@ class DemoApplication : Application() {
     init {
         appContext = this
     }
+
+    override fun onCreate() {
+        super.onCreate()
+        PreferenceUtil.init(this)
+    }
 }
