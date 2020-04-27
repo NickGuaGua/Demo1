@@ -1,3 +1,4 @@
 rootProject.name='demo1'
 include ':app'
 include ':model'
+include ':ui'
