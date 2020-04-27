@@ -30,5 +30,6 @@ data class WeatherTime(
 
 data class WeatherParameter(
     @SerializedName("parameterName") val name: String,
+    @SerializedName("parameterUnit") val unit: String,
     @SerializedName("parameterValue") val value: Int
 )
