@@ -1,19 +1,18 @@
 package com.nickgua.demo1.navigation
 
 import androidx.fragment.app.Fragment
-import com.nickgua.demo1.R
-import com.nickgua.demo1.detail.DetailFragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
+import com.nickgua.demo1.toppage.TopPageFragmentDirections
 
-class Navigator (private val fragment: Fragment) {
+class Navigator (fragment: Fragment) {
+
+    private val navController: NavController = fragment.findNavController()
 
     fun navigate(direction: Direction) {
         when(direction) {
             is Direction.DetailPage -> {
-                fragment.activity?.supportFragmentManager
-                    ?.beginTransaction()
-                    ?.replace(R.id.container, DetailFragment.newInstance(direction.weatherTime))
-                    ?.addToBackStack(null)
-                    ?.commit()
+                navController.navigate(TopPageFragmentDirections.topPageToDetail(direction.weatherTime))
             }
         }
     }
